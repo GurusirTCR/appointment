@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <script src="js/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <title>Document</title>
+</head>
+
+<body>
+
+
+  <div class="container text-center w-50">
+    <form id="demo">
+      <!-- <input type="number" name="id_input" id="id_input"> -->
+      <select type="number" id="id_input" name="id_input">
+        <% for(var i=1; i <=dataId.t; i++){ %>
+          <option type="number" value="<%=i%>">
+            <%= i%>
+          </option>
+          <%}%>
+      </select>
+      <button type="submit">Submit</button>
+    </form>
+    <div id="datetime">
+      <button  name="prev"  id="prev"> < </button>
+      <span   name="date" id="date" style="margin:0px 30px; "> </span>
+      <button name="next"  id="next">></button><br>
+      <span  name="slot" id="slot"> </span>
+    </div>
+
+  </div>
+
+  <script>
+    //
+
+    $(document).ready(function () {
+      $('#demo').on('submit', function () {
+        event.preventDefault();
+        const data = $(this).serialize();
+        console.log(data);
+
+        $.ajax({
+          url: '/demo',
+          method: 'GET',
+          data: data,
+          success: function (result, status, xhr) {
+            for(var i=0;i<result.data1.length;i++){
+            var v = result.data1[i]; 
+           
+              document.getElementById('slot').innerHTML += `<button onclick='f1(this)' value="${v}" name="color" id="color">${v} </button> </br>`;
+
+            } 
+           
+          }
+        })
+      });
+    });
+
+
+  
+      const click = document.getElementById('datetime').value
+      console.log(click);
+      function f1(data){
+        document.getElementById('color').style.backgroundColor = 'red';
+         console.log(data.value);
+       }
+     
+   if (!Date.now) {
+       Date.now = function() {
+        return new Date().getTime();
+         }
+      }
+      var theDate = Date.now();
+      document.getElementById('date').innerText = getTheDate(theDate)
+      
+      document.getElementById('prev').addEventListener("click", function() {
+       theDate -= 86400000;
+
+      document.getElementById('date').innerText = getTheDate(theDate)
+    })
+      document.getElementById('next').addEventListener("click", function() {
+     theDate += 86400000;
+       document.getElementById('date').innerText = getTheDate(theDate)
+   })
+      function getTheDate(getDate) {
+        var days = ["Sunday", "Monday", "Tuesday",
+            "Wednesday", "Thursday", "Friday", "Saturday"
+       ];
+         var months = ["January", "February", "March",
+          "April", "May", "June", "July", "August",
+          "September", "October", "November", "December"
+       ];
+          var theCDate = new Date(getDate);
+           return days[theCDate.getDay()] + ', ' + theCDate.getDate() + '-' +
+          months[theCDate.getMonth()] + '-' + theCDate.getFullYear();
+       }
+     
+</script>
+</body>
+
+</html>
